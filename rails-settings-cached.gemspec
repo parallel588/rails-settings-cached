@@ -23,4 +23,5 @@ Gem::Specification.new do |s|
   """
 
   s.add_dependency 'rails', '>= 4.2.0'
+  s.add_runtime_dependency 'configurations', '~> 2.2.0'
 end

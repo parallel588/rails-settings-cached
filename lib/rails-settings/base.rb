@@ -1,11 +1,12 @@
 module RailsSettings
   class Base < Settings
+
     def rewrite_cache
-      Rails.cache.write(cache_key, value)
+      CacheStore.write(cache_key, value)
     end
 
     def expire_cache
-      Rails.cache.delete(cache_key)
+      CacheStore.delete(cache_key)
     end
 
     def cache_key
@@ -31,7 +32,7 @@ module RailsSettings
 
       def [](key)
         return super(key) unless rails_initialized?
-        val = Rails.cache.fetch(cache_key(key, @object)) do
+        val = CacheStore.fetch(cache_key(key, @object)) do
           super(key)
         end
         val
@@ -40,8 +41,7 @@ module RailsSettings
       # set a setting value by [] notation
       def []=(var_name, value)
         super
-
-        Rails.cache.write(cache_key(var_name, @object),value)
+        CacheStore.write(cache_key(var_name, @object),value)
 
         value
       end
