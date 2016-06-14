@@ -12,7 +12,7 @@ module RailsSettings
       end
 
       def delete(key)
-        client.delete(key)
+        client.del(key)
       end
 
       def fetch(key, _ = {})
