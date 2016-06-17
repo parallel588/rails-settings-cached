@@ -7,6 +7,7 @@ module RailsSettings
 
     def expire_cache
       CacheStore.delete(cache_key)
+      CacheStore.delete('rails_settings_cached/updated_at')
     end
 
     def cache_key
@@ -22,8 +23,12 @@ module RailsSettings
         @cache_prefix = block
       end
 
+      def cache_update_settings
+        CacheStore.fetch('rails_settings_cached/updated_at') { maximum(:updated_at).to_i }
+      end
+
       def cache_key(var_name, scope_object)
-        scope = ["rails_settings_cached", cache_prefix_by_startup]
+        scope = ["rails_settings_cached", cache_update_settings, cache_prefix_by_startup]
         scope << @cache_prefix.call if @cache_prefix
         scope << "#{scope_object.class.name}-#{scope_object.id}" if scope_object
         scope << var_name.to_s
